@@ -3,6 +3,7 @@ environments:
   example-mdc:
     pipelines:
       - example-mdc-unittest
+      - example-mdc-integrationtest
 pipelines:
   example-mdc-unittest:
     group: example-mdc-build
