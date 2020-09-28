@@ -17,7 +17,7 @@ pipelines:
         branch: master
         destination: sourcecode-folder
     stages:
-    - unittest:
+    - unit-test:
         fetch_materials: true
         keep_artifacts: false
         clean_workspace: false
@@ -39,6 +39,7 @@ pipelines:
             - exec:
                 command: ls
                 run_if: passed
+  
   example-mdc-integrationtest:
     group: example-mdc-build
     label_template: ${COUNT}
@@ -53,7 +54,7 @@ pipelines:
         destination: sourcecode-folder
       example-mdc-unittest:
           pipeline: example-mdc-unittest
-          stage: integration-test
+          stage: unit-test
     stages:
     - integration-test:
         fetch_materials: true
