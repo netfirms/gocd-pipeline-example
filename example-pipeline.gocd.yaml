@@ -2,9 +2,9 @@ format_version: 9
 environments:
   example-mdc:
     pipelines:
-      - example-mdc-build
+      - example-mdc-unittest
 pipelines:
-  example-mdc-build:
+  example-mdc-unittest:
     group: example-mdc-build
     label_template: ${COUNT}
     lock_behavior: unlockWhenFinished
@@ -39,21 +39,42 @@ pipelines:
             - exec:
                 command: ls
                 run_if: passed
-    - integrationtest:
+  example-mdc-integrationtest:
+    group: example-mdc-build
+    label_template: ${COUNT}
+    lock_behavior: unlockWhenFinished
+    display_order: -1
+    materials:
+      git:
+        git: https://github.com/netfirms/gocd-example-sourcecode.git
+        shallow_clone: false
+        auto_update: false
+        branch: master
+        destination: sourcecode-folder
+      example-mdc-unittest:
+          pipeline: example-mdc-unittest
+          stage: integration-test
+    stages:
+    - integration-test:
         fetch_materials: true
         keep_artifacts: false
         clean_workspace: false
         approval:
           type: success
-          allow_only_on_success: true
+          allow_only_on_success: false
         jobs:
-          infra-code-scan:
+          agent-environment-check:
             timeout: 0
+            resources:
+            - example
             tasks:
             - exec:
-                arguments:
-                - infraCodeScan
-                command: ./go
-                working_directory: sourcecode-folder
+                command: whoami
+                run_if: passed
+            - exec:
+                command: pwd
+                run_if: passed
+            - exec:
+                command: ls
                 run_if: passed
     
